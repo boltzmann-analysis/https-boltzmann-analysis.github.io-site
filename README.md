@@ -1,3 +1,3 @@
 # 🚀 Live Site
 
-Visit the live site at: https://www.boltzmann.co.uk
+Visit the live site at: https://boltzmann.co.uk
