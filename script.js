@@ -68,6 +68,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize page
     initializePage();
+    
+    // Initialize Prism.js syntax highlighting
+    if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+    }
 });
 
 // Generate unique ID for registration
@@ -341,6 +346,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Syntax highlighting is now handled by Prism.js library
+
 // Field validation
 function validateField(field) {
     let isValid = true;
@@ -374,10 +381,51 @@ function closeImageModal() {
     document.body.style.overflow = 'auto'; // Restore scrolling
 }
 
+// Code modal functions
+function openCodeModal(codeElement, title) {
+    const modal = document.getElementById('code-modal');
+    const modalContent = document.getElementById('code-modal-content');
+    
+    // Get the code content
+    const codeBlock = codeElement.querySelector('pre code');
+    const codeText = codeBlock.textContent;
+    const language = codeBlock.className.replace('language-', '');
+    
+    // Set modal content
+    modalContent.innerHTML = `<code class="language-${language}"></code>`;
+    modalContent.querySelector('code').textContent = codeText;
+    
+    // Re-highlight the code
+    Prism.highlightElement(modalContent.querySelector('code'));
+    
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCodeModal() {
+    const modal = document.getElementById('code-modal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    const imageModal = document.getElementById('imageModal');
+    const codeModal = document.getElementById('code-modal');
+    
+    if (event.target === imageModal) {
+        closeImageModal();
+    }
+    if (event.target === codeModal) {
+        closeCodeModal();
+    }
+}
+
 // Close modal when pressing Escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeImageModal();
+        closeCodeModal();
     }
 });
 

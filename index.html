@@ -11,6 +11,11 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <!-- Prism.js CSS for syntax highlighting -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <!-- Header -->
@@ -89,59 +94,181 @@
               />
             </a>
           </div>
-          <p class="video-description">
-            Learn about the fundamentals of lexical complexity analysis and how
-            it can improve your understanding of text structure and readability.
-          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Comparison Section -->
+    <section class="code-comparison">
+      <div class="code-comparison-header">
+        <h2 class="section-title">Solution Comparison</h2>
+        <p class="section-description">
+          Compare different approaches and see how lexical complexity varies
+          across implementations.
+        </p>
+      </div>
+
+      <div class="code-grid">
+        <div class="code-column">
+          <h3 class="code-title">501 Complexity</h3>
+          <div class="code-block" onclick="openCodeModal(this, '501 Complexity - TypeScript')">
+            <pre><code class="language-typescript">
+type Rover = {
+  heading: string;
+  x: number;
+  y: number;
+};
+
+// Consolidated direction mappings
+const DIRECTIONS = ['N', 'E', 'S', 'W'] as const;
+const DIRECTION_DELTAS = { N: [0, 1], E: [1, 0], S: [0, -1], W: [-1, 0] } as const;
+
+function executeCommand(rover: Rover, command: string): void {
+  switch (command) {
+    case 'M':
+      const [dx, dy] = DIRECTION_DELTAS[rover.heading];
+      rover.x += dx;
+      rover.y += dy;
+      break;
+    case 'L':
+      const leftIndex = (DIRECTIONS.indexOf(rover.heading as any) + 3) % 4;
+      rover.heading = DIRECTIONS[leftIndex];
+      break;
+    case 'R':
+      const rightIndex = (DIRECTIONS.indexOf(rover.heading as any) + 1) % 4;
+      rover.heading = DIRECTIONS[rightIndex];
+      break;
+  }
+}
+
+export function commandRover(rawInstructions: string): string {
+  const lines = rawInstructions.split("\n");
+  const results: string[] = [];
+  
+  for (let i = 1; i < lines.length; i += 2) {
+    const [x, y, heading] = lines[i].split(" ");
+    const rover: Rover = { x: parseInt(x), y: parseInt(y), heading };
+    
+    for (const command of lines[i + 1]) {
+      executeCommand(rover, command);
+    }
+    
+    results.push(`${rover.x} ${rover.y} ${rover.heading}`);
+  }
+  
+  return results.join("\n");
+}</code></pre>
+          </div>
         </div>
 
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>Comprehensive Analysis</h3>
-            <p>
-              Deep lexical complexity scoring using advanced linguistic
-              algorithms and statistical models.
-            </p>
+        <div class="code-column">
+          <h3 class="code-title">488 Complexity</h3>
+          <div
+            class="code-block"
+            onclick="openCodeModal(this, '488 Complexity - TypeScript')"
+          >
+            <pre><code class="language-typescript">
+type Rover = { heading: string; x: number; y: number };
+
+// Optimized lookup tables
+const DIRS = ['N', 'E', 'S', 'W'];
+const MOVES = { N: [0, 1], E: [1, 0], S: [0, -1], W: [-1, 0] };
+const TURNS = { L: -1, R: 1 };
+
+export function commandRover(instructions: string): string {
+  const lines = instructions.split("\n");
+  const results = [];
+  
+  for (let i = 1; i < lines.length; i += 2) {
+    const [x, y, h] = lines[i].split(" ");
+    let rover = { x: +x, y: +y, heading: h };
+    let dirIndex = DIRS.indexOf(h);
+    
+    for (const cmd of lines[i + 1]) {
+      if (cmd === 'M') {
+        const [dx, dy] = MOVES[rover.heading];
+        rover.x += dx;
+        rover.y += dy;
+      } else {
+        dirIndex = (dirIndex + TURNS[cmd] + 4) % 4;
+        rover.heading = DIRS[dirIndex];
+      }
+    }
+    
+    results.push(`${rover.x} ${rover.y} ${rover.heading}`);
+  }
+  
+  return results.join("\n");
+}
+            </code></pre>
           </div>
-          <div class="feature-card">
-            <div class="feature-icon">⚡</div>
-            <h3>Lightning Fast</h3>
-            <p>
-              Static analysis means instant results. Process large documents in
-              milliseconds.
-            </p>
+        </div>
+
+        <div class="code-column">
+          <h3 class="code-title">712 Complexity</h3>
+          <div
+            class="code-block"
+            onclick="openCodeModal(this, '712 Complexity - Python')"
+          >
+            <pre><code class="language-typescript">const D = ['N', 'E', 'S', 'W'];
+const M = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+
+export function commandRover(s: string): string {
+  const l = s.split("\n");
+  let r = [];
+  
+  for (let i = 1; i < l.length; i += 2) {
+    let [x, y, d] = l[i].split(" ");
+    let [px, py, di] = [+x, +y, D.indexOf(d)];
+    
+    for (let c of l[i + 1]) {
+      if (c === 'M') {
+        px += M[di][0];
+        py += M[di][1];
+      } else {
+        di = (di + (c === 'L' ? 3 : 1)) % 4;
+      }
+    }
+    
+    r.push(`${px} ${py} ${D[di]}`);
+  }
+  
+  return r.join("\n");
+}</code></pre>
           </div>
-          <div class="feature-card">
-            <div class="feature-icon">🎯</div>
-            <h3>Precision Insights</h3>
-            <p>
-              Identify complex patterns, readability issues, and optimization
-              opportunities.
-            </p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon">🔧</div>
-            <h3>Developer Friendly</h3>
-            <p>
-              Easy integration with existing workflows through CLI tools and
-              APIs.
-            </p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon">📈</div>
-            <h3>Detailed Reporting</h3>
-            <p>
-              Comprehensive reports with actionable recommendations and
-              complexity metrics.
-            </p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon">🌐</div>
-            <h3>Multi-Language</h3>
-            <p>
-              Support for multiple languages with specialized complexity models.
-            </p>
+        </div>
+
+        <div class="code-column">
+          <h3 class="code-title">374 Complexity</h3>
+          <div class="code-block" onclick="openCodeModal(this, '374 Complexity - TypeScript')">
+            <pre><code class="language-typescript">const DIRECTIONS = 'NESW';
+const DELTA_X = [0, 1, 0, -1];
+const DELTA_Y = [1, 0, -1, 0];
+
+export function commandRover(instructions: string): string {
+  const lines = instructions.split("\n");
+  const results = [];
+  
+  for (let i = 1; i < lines.length; i += 2) {
+    const parts = lines[i].split(" ");
+    let posX = +parts[0];
+    let posY = +parts[1];
+    let dirIndex = DIRECTIONS.indexOf(parts[2]);
+    
+    for (const command of lines[i + 1]) {
+      if (command === 'M') {
+        posX += DELTA_X[dirIndex];
+        posY += DELTA_Y[dirIndex];
+      } else {
+        dirIndex = (dirIndex + (command === 'L' ? 3 : 1)) % 4;
+      }
+    }
+    
+    results.push(`${posX} ${posY} ${DIRECTIONS[dirIndex]}`);
+  }
+  
+  return results.join("\n");
+}</code></pre>
           </div>
         </div>
       </div>
@@ -273,6 +400,18 @@
       </div>
     </div>
 
+    <!-- Code Modal -->
+    <div id="code-modal" class="modal">
+      <div class="modal-content code-modal-content">
+        <span class="close" onclick="closeCodeModal()">&times;</span>
+        <pre id="code-modal-content"><code></code></pre>
+      </div>
+    </div>
+
+    <!-- Prism.js JavaScript for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

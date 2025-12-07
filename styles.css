@@ -329,6 +329,44 @@ body {
   }
 }
 
+/* Code Modal Styles */
+.code-modal-content {
+  max-width: 95vw;
+  max-height: 95vh;
+  width: 95vw;
+  min-width: 800px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  position: relative;
+  display: block;
+  margin: 2.5vh auto;
+}
+
+.code-modal-content .close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+.code-modal-content pre {
+  margin: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 3rem 2rem 2rem 2rem;
+  overflow: auto;
+  max-height: 85vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.code-modal-content code {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
 /* Sections */
 .features,
 .register {
@@ -426,6 +464,93 @@ body {
   color: var(--off-white);
   line-height: 1.6;
 }
+
+/* Code Comparison Section */
+.code-comparison {
+  padding: 6rem 0;
+  background: var(--primary-black);
+}
+
+.code-comparison-header {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-description {
+  color: var(--off-white);
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.code-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  padding: 0 2rem;
+  max-width: none;
+}
+
+.code-column {
+  background: var(--dark-gray);
+  border-radius: var(--border-radius-large);
+  overflow: hidden;
+  border: 1px solid var(--medium-gray);
+  transition: var(--transition);
+}
+
+.code-column:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.code-title {
+  background: var(--medium-gray);
+  color: var(--pure-white);
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  margin: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.code-block {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #1a1a1a;
+}
+
+.code-block:hover {
+  border-color: #00ff9f;
+  box-shadow: 0 4px 12px rgba(0, 255, 159, 0.2);
+  transform: translateY(-2px);
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--primary-black);
+  color: var(--off-white);
+  font-family: "Monaco", "Menlo", "Courier New", monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.code-block code {
+  font-family: inherit;
+}
+
+/* Syntax highlighting is handled by Prism.js */
 
 /* Registration Form */
 .register-content {
@@ -595,7 +720,23 @@ body {
   color: var(--light-gray);
 }
 
-/* Responsive Design */
+/* Responsive design */
+@media (max-width: 1400px) {
+  .code-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 1000px) {
+  .code-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+}
+
 @media (max-width: 768px) {
   .modal-content {
     margin: 1rem auto;
@@ -670,6 +811,16 @@ body {
   .features,
   .register {
     padding: 4rem 0;
+  }
+
+  .code-comparison {
+    padding: 4rem 0;
+  }
+
+  .code-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 0.5rem;
   }
 
   .hero-cta {
