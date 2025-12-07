@@ -30,12 +30,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Get form data
             const formData = new FormData(this);
+            
             const registrationData = {
                 name: formData.get('name'),
                 email: formData.get('email'),
                 company: formData.get('company'),
                 role: formData.get('role'),
                 useCase: formData.get('useCase'),
+                languages: formData.get('languages'),
                 updates: formData.get('updates') === 'on'
             };
 
@@ -93,6 +95,10 @@ function sendRegistrationEmail(data) {
         const subject = encodeURIComponent('Boltzmann Analyser - New Registration Interest');
         
         // Create email body with registration details
+        const languagesText = data.languages && data.languages.trim() 
+            ? data.languages 
+            : 'Not specified';
+            
         const body = encodeURIComponent(
             `New registration for Boltzmann Analyser!
 
@@ -106,6 +112,8 @@ function sendRegistrationEmail(data) {
             `Role: ${data.role || 'Not specified'}
 ` +
             `Use Case: ${data.useCase || 'Not specified'}
+` +
+            `Programming Languages: ${languagesText}
 ` +
             `Wants Updates: ${data.updates ? 'Yes' : 'No'}
 ` +

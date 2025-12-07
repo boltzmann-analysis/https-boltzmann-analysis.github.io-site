@@ -631,6 +631,23 @@ body {
   transform: scale(1.2);
 }
 
+/* Language selection grid */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.language-checkbox {
+  font-size: 0.9rem;
+}
+
+.language-checkbox input[type="checkbox"] {
+  margin-right: 0.5rem;
+  transform: scale(1.1);
+}
+
 /* Success Message */
 .success-message {
   background: var(--dark-gray);
