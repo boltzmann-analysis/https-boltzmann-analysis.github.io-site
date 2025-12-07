@@ -113,7 +113,7 @@ function sendRegistrationEmail(data) {
         );
         
         // Create mailto link
-        const mailtoLink = `mailto:samanthacohen294@gmail.com?subject=${subject}&body=${body}`;
+        const mailtoLink = `mailto:boltzmannanalyser@gmail.com?subject=${subject}&body=${body}`;
         
         // Open email client
         window.location.href = mailtoLink;
@@ -316,7 +316,7 @@ window.BoltzmannAdmin = {
             `Registration Date: ${new Date().toLocaleString()}\n\n` +
             `This registration was submitted via the Boltzmann Analyser website.`
         );
-        return `mailto:samanthacohen294@gmail.com?subject=${subject}&body=${body}`;
+        return `mailto:boltzmannanalyser@gmail.com?subject=${subject}&body=${body}`;
     }
 };
 

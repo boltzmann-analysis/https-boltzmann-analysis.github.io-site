@@ -16,7 +16,7 @@ Visit the live site at: https://[your-username].github.io/boltzmann-site
 
 ## 📧 Registration System
 
-When users register their interest, the form creates a mailto link that opens their email client with pre-filled content sent to: `samanthacohen294@gmail.com`
+When users register their interest, the form creates a mailto link that opens their email client with pre-filled content sent to: `boltzmannanalyser@gmail.com`
 
 ## 🛠 Tech Stack
 
@@ -59,6 +59,7 @@ To run locally:
 ## 📱 Responsive Design
 
 The site is fully responsive with breakpoints at:
+
 - Desktop: 1200px+
 - Tablet: 768px - 1199px
 - Mobile: < 768px
