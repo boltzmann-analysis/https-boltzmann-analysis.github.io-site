@@ -391,31 +391,25 @@ body {
   text-align: center;
 }
 
-.video-thumbnail-container {
+.video-embed-container {
   position: relative;
-  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 1.5rem;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
   border-radius: var(--border-radius-large);
   overflow: hidden;
   box-shadow: var(--shadow-medium);
-  transition: var(--transition);
 }
 
-.video-thumbnail-container:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-strong);
-}
-
-.video-thumbnail-link {
-  display: block;
-  position: relative;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.video-thumbnail-image {
+.video-embed-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto;
-  display: block;
+  height: 100%;
+  border: none;
   border-radius: var(--border-radius-large);
 }
 
