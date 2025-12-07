@@ -368,12 +368,12 @@ body {
 }
 
 /* Sections */
-.features,
+.explanation,
 .register {
   padding: 6rem 0;
 }
 
-.features {
+.explanation {
   background: var(--dark-gray);
 }
 
@@ -421,8 +421,8 @@ body {
   margin: 0 auto;
 }
 
-/* Features Grid */
-.features-grid {
+/* explanation Grid */
+.explanation-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
@@ -794,7 +794,7 @@ body {
     gap: 1rem;
   }
 
-  .features-grid {
+  .explanation-grid {
     grid-template-columns: 1fr;
   }
 
@@ -829,7 +829,7 @@ body {
     font-size: 2rem;
   }
 
-  .features,
+  .explanation,
   .register {
     padding: 4rem 0;
   }
