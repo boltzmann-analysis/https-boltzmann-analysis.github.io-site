@@ -735,6 +735,16 @@ body {
     gap: 1.5rem;
     padding: 0 1rem;
   }
+
+  .code-block {
+    cursor: default;
+  }
+
+  .code-block:hover {
+    border-color: #333;
+    box-shadow: none;
+    transform: none;
+  }
 }
 
 @media (max-width: 768px) {

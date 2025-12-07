@@ -383,6 +383,11 @@ function closeImageModal() {
 
 // Code modal functions
 function openCodeModal(codeElement, title) {
+    // Don't open modal if we're in single-column view (mobile/tablet)
+    if (window.innerWidth <= 1000) {
+        return;
+    }
+    
     const modal = document.getElementById('code-modal');
     const modalContent = document.getElementById('code-modal-content');
     
