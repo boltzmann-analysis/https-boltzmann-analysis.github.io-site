@@ -4,7 +4,7 @@ A static website for collecting interest registrations for Boltzmann Analyser, a
 
 ## 🚀 Live Site
 
-Visit the live site at: https://[your-username].github.io/boltzmann-site
+Visit the live site at: https://boltzmann-analysis.github.io/https-boltzmann-analysis.github.io-site/
 
 ## 🎨 Features
 
