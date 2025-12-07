@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boltzmann Analyser - Lexical Complexity Analysis</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <nav class="nav">
+        <div class="nav-brand">
+          <img
+            src="logo/Logo-white.png"
+            alt="Boltzmann Analyser Logo"
+            class="logo"
+          />
+          <h1>Boltzmann Analyser</h1>
+        </div>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#register" class="btn-outline">Register Interest</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h2 class="hero-title">
+            Advanced <span class="highlight">Lexical Complexity</span> Analysis
+          </h2>
+          <p class="hero-description">
+            Unlock deeper insights into text complexity with Boltzmann Analyser.
+            Our cutting-edge static analysis tool revolutionizes how you
+            understand and optimize written content.
+          </p>
+          <div class="hero-cta">
+            <a href="#register" class="btn-primary">Register Your Interest</a>
+            <a href="#features" class="btn-secondary">Learn More</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="analysis-preview">
+            <div class="code-block">
+              <div class="code-header">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="filename">analysis.txt</span>
+              </div>
+              <div class="code-content">
+                <div class="line">
+                  <span class="complexity-low">Simple text structure</span>
+                  <span class="score">Score: 2.1</span>
+                </div>
+                <div class="line">
+                  <span class="complexity-medium"
+                    >Moderate complexity detected</span
+                  >
+                  <span class="score">Score: 4.7</span>
+                </div>
+                <div class="line">
+                  <span class="complexity-high"
+                    >Complex linguistic patterns</span
+                  >
+                  <span class="score">Score: 8.3</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+      <div class="container">
+        <h2 class="section-title">Why Boltzmann Analyser?</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Comprehensive Analysis</h3>
+            <p>
+              Deep lexical complexity scoring using advanced linguistic
+              algorithms and statistical models.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Lightning Fast</h3>
+            <p>
+              Static analysis means instant results. Process large documents in
+              milliseconds.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>Precision Insights</h3>
+            <p>
+              Identify complex patterns, readability issues, and optimization
+              opportunities.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔧</div>
+            <h3>Developer Friendly</h3>
+            <p>
+              Easy integration with existing workflows through CLI tools and
+              APIs.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Detailed Reporting</h3>
+            <p>
+              Comprehensive reports with actionable recommendations and
+              complexity metrics.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h3>Multi-Language</h3>
+            <p>
+              Support for multiple languages with specialized complexity models.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section id="register" class="register">
+      <div class="container">
+        <div class="register-content">
+          <h2 class="section-title">Register Your Interest</h2>
+          <p class="register-description">
+            Be among the first to experience the future of lexical complexity
+            analysis. Register now for early access and exclusive updates.
+          </p>
+
+          <form id="registrationForm" class="registration-form">
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="company">Company/Organization</label>
+              <input type="text" id="company" name="company" />
+            </div>
+
+            <div class="form-group">
+              <label for="role">Your Role</label>
+              <select id="role" name="role">
+                <option value="">Select your role</option>
+                <option value="developer">Software Developer</option>
+                <option value="researcher">Researcher</option>
+                <option value="analyst">Data Analyst</option>
+                <option value="writer">Content Writer/Editor</option>
+                <option value="academic">Academic</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="useCase">Primary Use Case</label>
+              <textarea
+                id="useCase"
+                name="useCase"
+                rows="3"
+                placeholder="Tell us how you plan to use Boltzmann Analyser..."
+              ></textarea>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="updates" name="updates" checked />
+                <span class="checkmark"></span>
+                Send me product updates and early access notifications
+              </label>
+            </div>
+
+            <button type="submit" class="btn-primary btn-full">
+              Register Interest
+            </button>
+          </form>
+
+          <div
+            id="successMessage"
+            class="success-message"
+            style="display: none"
+          >
+            <div class="success-icon">✓</div>
+            <h3>Registration Successful!</h3>
+            <p>
+              Thank you for your interest in Boltzmann Analyser. We'll keep you
+              updated on our progress.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <div class="footer-logo-container">
+              <img
+                src="logo/Logo-white.png"
+                alt="Boltzmann Analyser Logo"
+                class="footer-logo"
+              />
+              <h3>Boltzmann Analyser</h3>
+            </div>
+            <p>Revolutionizing lexical complexity analysis</p>
+          </div>
+          <div class="footer-links">
+            <div class="footer-section">
+              <h4>Product</h4>
+              <a href="#features">Features</a>
+              <a href="#register">Register Interest</a>
+            </div>
+            <div class="footer-section">
+              <h4>Contact</h4>
+              <a href="mailto:info@boltzmann-analyser.com"
+                >info@boltzmann-analyser.com</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Boltzmann Analyser. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
