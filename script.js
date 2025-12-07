@@ -351,8 +351,7 @@ function validateField(field) {
     
     if (field.type === 'email' && field.value && !isValidEmail(field.value)) {
         isValid = false;
-    }
-    
+    }    
     // Add visual feedback
     field.classList.remove('field-valid', 'field-invalid');
     if (field.value) {
@@ -361,3 +360,33 @@ function validateField(field) {
     
     return isValid;
 }
+
+// Modal functions for interface screenshot
+function openImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore scrolling
+}
+
+// Close modal when pressing Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeImageModal();
+    }
+});
+
+// Prevent modal from closing when clicking on the image itself
+document.addEventListener('DOMContentLoaded', function() {
+    const modalImage = document.getElementById('modalImage');
+    if (modalImage) {
+        modalImage.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+});
