@@ -1,0 +1,258 @@
+---
+title: "Validating a Complexity Metric: How Do You Know It Works?"
+description: "Establishing credibility through rigorous validation methodology - convergent validity, discriminant validity, and predictive power."
+date: 2025-01-18
+series: "Lexical Complexity Research Series"
+seriesPart: 2
+---
+
+<div class="attribution">
+**Note:** This post was written with assistance from Claude (Anthropic) to present research findings in a clear, accessible format. The research, data collection, and analysis are my own work.
+</div>
+
+## Why Validate?
+
+Lexical Complexity started as an idea I came up with one day - a way of measuring code complexity based on AST structure. It produces numbers, but **does it actually tell us anything useful?**
+
+Before using any metric to make decisions, I wanted to understand what value it actually brings. Does it measure what I think it measures? Does it predict anything meaningful about code? Or is it just an elaborate way to count things?
+
+**This post documents my attempt to find out.**
+
+## The Validation Framework
+
+Validating a metric requires answering three questions:
+
+### 1. Convergent Validity
+Does the metric correlate with established metrics that measure the same construct?
+
+If I claim to measure "complexity", my metric should correlate with other complexity metrics. A complexity metric that shows no relationship with Cyclomatic Complexity would be suspicious - either I'm measuring something else entirely, or one of us is wrong about what "complexity" means.
+
+### 2. Discriminant Validity
+Does the metric measure something *different* from related but distinct constructs?
+
+A good metric shouldn't be redundant. If Lexical Complexity correlates perfectly with lines of code, it's just an expensive way to count lines. If it correlates perfectly with another complexity metric, why bother?
+
+### 3. Predictive Validity
+Does the metric predict real-world outcomes?
+
+This is the most important test. A metric that doesn't predict anything useful is, by definition, useless - no matter how theoretically elegant.
+
+## The Adversarial Approach
+
+Throughout this research, I've taken an **adversarial approach**: actively trying to disprove my own hypothesis. Every positive result invites the question "what confound could explain this?" Every correlation gets tested against alternative explanations.
+
+This isn't pessimism - it's how you build confidence. A result that survives attempts to destroy it is far more credible than one that was never challenged.
+
+## Convergent Validity: Comparing with Cyclomatic Complexity
+
+The first test: does Lexical Complexity correlate with McCabe's Cyclomatic Complexity, the most widely-used complexity metric in software engineering?
+
+**Dataset:** 44 Python files from the Flask framework, at a specific commit with both metrics calculated.
+
+**Result:**
+
+```
+Lexical Complexity ↔ Cyclomatic Complexity
+  n = 44 files
+  r = +0.978
+  p < 0.0001
+```
+
+**Interpretation:** Very strong correlation. Both metrics identify the same files as complex.
+
+This is almost *too* high. Literature typically expects r = 0.4-0.7 between related metrics. A correlation of 0.978 suggests the metrics might be redundant.
+
+But this makes sense when you think about it: Cyclomatic Complexity counts decision points (if/else, loops, etc.), and these same structures create branching in the AST that Lexical Complexity measures. In Python especially, control flow and AST structure are tightly coupled.
+
+So the metric does seem to measure something related to what we conventionally call "complexity" - though the very high correlation raises the question of whether it's just measuring the same thing as Cyclomatic in a more complicated way.
+
+<img src="/images/lc_cc_correlation_validation.png" alt="Lexical Complexity vs Cyclomatic Complexity correlation analysis" />
+<p class="image-caption">LC vs CC correlation on Flask: r = 0.98 (click to enlarge)</p>
+
+## Discriminant Validity: Comparing with Cognitive Complexity
+
+The second test: does Lexical Complexity measure something *different* from Cognitive Complexity, a modern metric designed to match human perception of code difficulty?
+
+**Dataset:** 275 Python files across Flask, Requests, and Scrapy.
+
+**Result:**
+
+```
+Lexical Complexity ↔ Cognitive Complexity
+  Overall r = 0.32
+
+  By project:
+  - Flask (33 files):    r = 0.36, p = 0.041
+  - Requests (24 files): r = 0.18, p = 0.396 (not significant)
+  - Scrapy (218 files):  r = 0.41, p < 0.0001
+```
+
+**Interpretation:** Weak but consistent correlation.
+
+This is actually *good news*. The weak correlation with Cognitive Complexity demonstrates that Lexical Complexity captures something different - it's not just another way of measuring "how hard code is to understand."
+
+**The pattern:**
+- Strong correlation with Cyclomatic (r = 0.98): validates it measures "complexity"
+- Weak correlation with Cognitive (r = 0.32): shows it's not redundant
+
+Cognitive Complexity focuses on perceived cognitive load - how hard code *feels* to understand. Lexical Complexity focuses on structural complexity - the objective shape of the AST. These seem to be related but distinct concepts - or at least, the metrics don't move together in lockstep.
+
+## Predictive Validity: The Volatility Correlation
+
+The most important test: does Lexical Complexity predict anything about real-world code behaviour?
+
+I looked at **volatility** - the variation in a file's *Lexical Complexity scores* across its modification history. Important caveat upfront: volatility here is measured using the same metric we're trying to validate. This creates a coupling that makes interpretation tricky.
+
+The hypothesis was that complex code might show higher volatility, though I wasn't sure what mechanism would cause this (or if any would).
+
+**Dataset:** ~4,000 files across 30 open-source projects, each with modification history.
+
+**Initial result:** r = 0.78
+
+But that number turned out to be misleading. When I investigated the outliers, I found 58 files (1.5% of the data) that were generated code - minified JavaScript bundles, Windows Forms `.Designer.cs` files, protobuf stubs. These files have extreme complexity (mean: 54,000) and extreme volatility (mean: 34,000) because they're regenerated wholesale when specifications change.
+
+**After removing generated code:** r = 0.64
+
+**Spearman correlation (robust to outliers):** ρ = 0.53
+
+The correlation is still there, but it's more modest than the initial number suggested. r = 0.5-0.6 is reasonable for software metrics research - not a dramatic finding, but not nothing either.
+
+<img src="/images/complexity_volatility_validation.png" alt="Complexity predicts code volatility" />
+<p class="image-caption">Note: this chart shows the original r = 0.78 before outlier investigation (click to enlarge)</p>
+
+But here's the critical question: **is this just measuring file size?**
+
+Larger files naturally have more complexity (more code = more structure). They might also have more volatility simply because there's more code to change. The correlation could be spurious.
+
+## Controlling for File Size
+
+This is where partial correlation becomes essential. A partial correlation measures the relationship between two variables while controlling for a third.
+
+**After controlling for lines of code:**
+
+The partial correlation (complexity → volatility, controlling for LOC) was similar or slightly stronger than the raw correlation in the original analysis. This suggests file size isn't driving the relationship - if anything, it was obscuring it.
+
+But the key question remains: after accounting for generated code and outliers, what's left? A moderate correlation (r ~0.5-0.6) that might mean something about structural complexity and maintenance - or might not.
+
+<img src="/images/partial_correlation_loc.png" alt="Partial correlation analysis controlling for LOC" />
+<p class="image-caption">Controlling for file size: the complexity-volatility correlation strengthens (click to enlarge)</p>
+
+## What Does Volatility Actually Mean?
+
+Volatility here is the standard deviation of *Lexical Complexity scores* across a file's modification history. High volatility means a file's measured complexity fluctuates significantly as developers modify it.
+
+This is worth emphasising: we're correlating a file's mean Lexical Complexity with the standard deviation of that same file's Lexical Complexity over time. The metric is being used to validate itself, which creates interpretive challenges.
+
+Why would complex files show higher volatility? There are a few possible explanations.
+
+**The maintainability interpretation:**
+- Complex code is harder to understand, leading to inconsistent modifications
+- Different developers approach complex code with different mental models
+- Refactoring attempts don't fully resolve underlying complexity
+
+**The measurement artifact interpretation:**
+Complexity compounds in how I measure it. Adding a child node to an already complex parent increases complexity *more* than the same operation on a simpler node - that's how the factorial branching term works. So complex files might show higher volatility simply because any change to them produces a larger complexity delta.
+
+But here's the thing: if that were the whole story, LOC should also correlate with volatility. LOC correlates very strongly with complexity (r > 0.9 in most projects), so if volatility were just "bigger files show bigger deltas," we'd expect LOC to predict volatility too. Yet controlling for LOC *strengthens* the complexity-volatility correlation.
+
+That suggests something about the *structure* of complexity - not just the amount of code - is related to volatility. What exactly that means, I'm not sure. It could still be a measurement artifact I haven't identified, or it could be capturing something real about how structural complexity affects maintenance.
+
+Notably, complex files are **not** modified more frequently (that correlation is near zero). Developers don't avoid complex code - they engage with it. Whether the volatility reflects genuine maintenance difficulty or something else remains an open question.
+
+## What the Metric Doesn't Predict
+
+Intellectual honesty requires acknowledging failures. One early hope was that complexity would predict bug frequency - complex code should have more bugs.
+
+**Result:** ρ = 0.096 (essentially no relationship)
+
+This was disappointing but instructive. Investigation revealed the problem wasn't the metric - it was the measurement of "bugs." Using "fix:" commit messages as a proxy for bugs is unreliable: 11-20% of "fix:" commits aren't actually bug fixes (formatting, CI configuration, documentation updates).
+
+The lesson: **garbage in, garbage out.** Commit message semantics are too noisy for precise bug prediction. Volatility, measured from actual structural changes, proved to be a cleaner signal.
+
+## Independence from Development Process
+
+A structural complexity metric should measure properties of the code itself, not how it was developed. Several tests confirmed this:
+
+**Complexity density (complexity per line) vs. temporal metrics:**
+
+| Metric | Correlation with Complexity Density |
+|--------|-------------------------------------|
+| File age | r = -0.012 (not significant) |
+| Modification count | r = -0.005 (not significant) |
+| Days between modifications | r = -0.004 (not significant) |
+| LOC growth rate | r = -0.001 (not significant) |
+
+**Interpretation:** Complexity is an intrinsic property of code structure, not a side effect of development process. Old code isn't systematically more or less complex than new code. Frequently modified files aren't systematically different from stable ones.
+
+This is exactly what you want from a structural metric.
+
+## The Scale of Validation
+
+These findings come from:
+
+- **30+ open-source projects** for volatility analysis
+- **275 files** for discriminant validity testing
+- **8,411 files** with modification history
+- **42,884 files** in clustering analysis
+- **463 repositories** across 15 programming languages
+- **~1.4 million total files** analysed
+
+This isn't a handful of cherry-picked examples. The patterns hold across projects, languages, and time.
+
+## What Did I Learn?
+
+After this analysis, here's what I can say:
+
+1. **Lexical Complexity correlates with Cyclomatic Complexity** (r = 0.978) - so it's measuring something in the same family as established complexity metrics
+
+2. **It's not redundant with Cognitive Complexity** (r = 0.32) - it captures something different
+
+3. **It correlates with its own volatility** (r = 0.5-0.6 after removing generated code outliers) - files with high mean complexity show higher standard deviation in complexity over time, though the interpretation is uncertain since volatility is measured in terms of the metric itself
+
+4. **It's independent of development process** - file age, modification frequency, etc. don't predict complexity density
+
+5. **The patterns hold at scale** - across projects, languages, and thousands of files
+
+What I *can't* say:
+
+- **Whether the volatility correlation means anything useful.** It could be a measurement artifact rather than revealing something about maintainability
+- **Whether complexity causes anything.** These are correlations, not causal claims
+- **Whether this helps developers.** No ground truth from actual humans about comprehension difficulty
+- **What the metric misses.** Only code that persists in history gets analysed
+
+The metric correlates with things. Whether those correlations translate to actionable insights remains an open question.
+
+## Why Bother With All This?
+
+I could have just used the metric and assumed it works. But I wanted to understand what I was actually measuring before drawing conclusions from it.
+
+The adversarial approach - actively trying to disprove your own hypothesis - is uncomfortable but useful. It's how you find out if you're fooling yourself.
+
+Lexical Complexity didn't fail these tests, but it also didn't produce the clear "this predicts bugs" result I originally hoped for. The volatility correlation is interesting but ambiguous. The next posts will explore what else the metric reveals - and what it doesn't.
+
+## Summary
+
+**What the tests showed:**
+
+| Type | Test | Result |
+|------|------|--------|
+| Convergent | vs. Cyclomatic Complexity | r = 0.98 |
+| Discriminant | vs. Cognitive Complexity | r = 0.32 |
+| Predictive | → Complexity Volatility | r = 0.5-0.6 (after removing generated code) |
+| Independence | vs. Development Process | r ≈ 0 |
+
+**The interesting finding:** There's a moderate correlation between complexity and volatility that isn't explained by file size. But the original r = 0.78 was inflated by generated code outliers - 58 files (1.5% of the data) were doing most of the work.
+
+**The disappointing finding:** No relationship with bug frequency (ρ = 0.096).
+
+<div class="series-nav">
+
+#### Lexical Complexity Research Series
+
+**Previous:** [Measuring Code Complexity From the AST](/blog/2025-01-17-lexical-complexity-intro)
+
+**Post 2:** Validating a Complexity Metric (you are here)
+
+**Next:** Complexity predicts code volatility - and it's not just file size
+
+</div>

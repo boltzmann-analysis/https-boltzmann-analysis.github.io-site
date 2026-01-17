@@ -44,10 +44,16 @@ const formattedDate = date.toLocaleDateString('en-GB', {
 
 <style>
   .blog-container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 2rem;
     padding-top: 100px;
+  }
+
+  @media (min-width: 1400px) {
+    .blog-container {
+      max-width: 1000px;
+    }
   }
 
   .blog-header {

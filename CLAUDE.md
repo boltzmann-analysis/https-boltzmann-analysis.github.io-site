@@ -45,7 +45,13 @@ When writing blog posts, use these directories as sources of information:
 
 These contain the actual research findings, validation results, and methodology documentation.
 
+Copy relevant charts and visualizations from these directories into `public/images/` and include them in blog posts. New charts can also be generated (using matplotlib, seaborn, etc.) where helpful to illustrate a point. Visual evidence strengthens the writing.
+
 ## Content Guidelines
+
+**Tone:** Be humble and curious, not self-aggrandizing. Don't put down other people's work or metrics to make this one look better. The framing should be genuine curiosity about whether this metric (which started as a whim) actually has value - not claiming superiority over established approaches.
+
+Present findings with appropriate uncertainty throughout - not confident claims followed by late walk-backs. If a result has multiple interpretations or limitations, introduce that ambiguity upfront rather than building up confidence and then deflating it. The reader should feel they're exploring alongside the author, not being sold a conclusion.
 
 **Research claims and citations:** Never include claims about external research (e.g., "cognitive science research shows...", "studies have found...") without proper citations. Only include such claims if the user provides the specific citation or source. Making unsourced claims about research findings undermines credibility and may be inaccurate.
 
