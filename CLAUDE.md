@@ -2,6 +2,16 @@
 
 Astro-based static site for boltzmann.co.uk
 
+## Git Workflow
+
+**Never work directly on the main branch.** Always create a feature branch for changes:
+
+```bash
+git checkout -b feature/description-of-change
+```
+
+Push the branch and create a PR for review before merging to main.
+
 ## Structure
 
 - `src/pages/` - Page routes (index, blog)
