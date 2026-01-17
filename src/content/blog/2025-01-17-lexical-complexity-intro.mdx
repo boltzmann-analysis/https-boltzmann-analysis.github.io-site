@@ -1,0 +1,189 @@
+---
+title: "Measuring Code Complexity From the AST: A New Approach"
+description: "Introducing Lexical Complexity - a code complexity metric based on abstract syntax tree structure, inspired by information theory and statistical mechanics."
+date: 2025-01-17
+series: "Lexical Complexity Research Series"
+seriesPart: 1
+---
+
+<div class="attribution">
+**Note:** This post was written with assistance from Claude (Anthropic) to present research findings in a clear, accessible format. The research, data collection, and analysis are my own work.
+</div>
+
+## The Problem With Code Complexity Metrics
+
+If you've worked in software for any length of time, you've probably encountered code complexity metrics. Cyclomatic Complexity, Cognitive Complexity - these tools promise to tell us which code is "complex" and might need attention.
+
+But there's a problem: **most complexity metrics have weak theoretical foundations and limited empirical validation**.
+
+McCabe's Cyclomatic Complexity (1976) counts linearly independent paths through code. It's simple, widely adopted, and... mostly just counts decision points.
+
+Cognitive Complexity (SonarSource) attempts to measure human difficulty in understanding code, but its rules are somewhat arbitrary - why does a nested `if` add more than a flat one? The intuition is right, but the implementation is ad hoc.
+
+**I wanted to see if there was a more principled approach.**
+
+## The Insight: Complexity Lives in Structure
+
+Here's the key observation: when we read code, we don't process it as a flat sequence of characters. We parse it into a hierarchical structure - an Abstract Syntax Tree (AST).
+
+```javascript
+function calculateTotal(items) {
+    let total = 0;
+    for (const item of items) {
+        if (item.taxable) {
+            total += item.price * 1.1;
+        } else {
+            total += item.price;
+        }
+    }
+    return total;
+}
+```
+
+This code isn't just 12 lines. It's a tree:
+
+```
+FunctionDeclaration
+├── Identifier: calculateTotal
+├── Parameter: items
+└── BlockStatement
+    ├── VariableDeclaration: total = 0
+    ├── ForOfStatement
+    │   ├── VariableDeclaration: item
+    │   ├── Identifier: items
+    │   └── BlockStatement
+    │       └── IfStatement
+    │           ├── MemberExpression: item.taxable
+    │           ├── BlockStatement (consequent)
+    │           │   └── AssignmentExpression
+    │           └── BlockStatement (alternate)
+    │               └── AssignmentExpression
+    └── ReturnStatement: total
+```
+
+The **structure** of this tree - its depth, its branching - is what makes code hard or easy to understand. Deeply nested code requires holding more context in working memory. Nodes with many children represent decision points where multiple paths diverge.
+
+## Core Concepts
+
+The metric I've been developing - which I call **Lexical Complexity** - is built on a few key principles:
+
+### 1. Depth Matters
+
+Nested code is harder than flat code. A function with three levels of nesting requires you to mentally track "I'm inside function X, inside loop Y, inside condition Z" while reading any given line.
+
+### 2. Branching Matters
+
+A node with many children represents a point where the code branches in multiple directions. Consider:
+
+```python
+# Two branches
+if condition:
+    do_a()
+else:
+    do_b()
+
+# Five branches
+match value:
+    case 1: do_a()
+    case 2: do_b()
+    case 3: do_c()
+    case 4: do_d()
+    case 5: do_e()
+```
+
+The five-way branch isn't just 2.5× harder than the two-way branch - the number of possible interactions and paths grows much faster than linearly.
+
+### 3. Complexity Accumulates
+
+The total complexity of a piece of code is the accumulated complexity of all its parts. A file with ten simple functions has complexity from each function summed together.
+
+### 4. Information-Theoretic Grounding
+
+The metric draws inspiration from information theory and statistical mechanics. In Boltzmann's entropy formula, entropy relates logarithmically to the number of possible microstates. Similarly, a node with more children represents more possible "states" the code could be in at that point.
+
+This is where the name comes from - and why I use `ln(out_degree!)` (the natural log of the factorial of the number of children) as a component. The factorial captures how possibilities multiply with branching.
+
+## What This Looks Like in Practice
+
+I built an analyser that parses code into ASTs using [tree-sitter](https://tree-sitter.github.io/tree-sitter/) (the same parser used by GitHub for syntax highlighting) and calculates Lexical Complexity. It currently supports 15 programming languages.
+
+Here's what the relationship between Lexical Complexity and Cyclomatic Complexity looks like across 54 files from the Flask framework:
+
+<img src="/images/lc_cc_correlation_analysis.png" alt="Correlation between Lexical Complexity and Cyclomatic Complexity" />
+<p class="image-caption">LC vs CC correlation analysis on Flask (click to enlarge)</p>
+
+The correlation is very high (r = 0.98), which tells us:
+
+1. Lexical Complexity captures something similar to Cyclomatic Complexity (convergent validity)
+2. But they're not identical - the scatter and residuals show real differences
+
+The bottom-right histogram is particularly interesting: it shows the distributions of normalized complexity have different shapes, suggesting the metrics weight different aspects of code differently.
+
+## Cross-Language Patterns
+
+One advantage of AST-based analysis is that it works across languages. Here's how various correlations look across 11 programming languages:
+
+<img src="/images/language_correlation_comparison.png" alt="Cross-language complexity correlation comparison" />
+<p class="image-caption">Cross-language complexity patterns (click to enlarge)</p>
+
+Some observations:
+
+- **LOC vs Complexity** (top-left): All languages show strong correlation between lines of code and complexity. This is expected - more code means more structure.
+- **File Count vs Total Complexity** (bottom-left): Larger projects have more total complexity. Again, expected.
+- **The interesting panel is top-right**: LOC vs Complexity *Density*. This asks: does file size affect how *dense* the complexity is? Languages vary dramatically here. Rust shows negative correlation (larger files are less dense), while Go shows positive correlation.
+
+This kind of cross-language analysis reveals that **complexity behaves differently in different language ecosystems** - a finding I'll explore more in future posts.
+
+## Why Does This Matter?
+
+If Lexical Complexity just correlates with Cyclomatic Complexity, why bother?
+
+One observation from the data: across 30 open-source projects and nearly 4,000 files, Lexical Complexity correlates with **code volatility** - the standard deviation of a file's complexity scores across its modification history:
+
+<img src="/images/complexity_volatility_focus.png" alt="Complexity predicts code volatility" />
+<p class="image-caption">Complexity-volatility correlation (click to enlarge)</p>
+
+The left panel shows the correlation at file level (r = 0.77). The right panel shows project-level correlations - every one of the top 10 projects shows positive correlation, with a mean around r = 0.38.
+
+What does this mean? Files with higher complexity tend to have more erratic complexity changes over time - their structure fluctuates as developers modify them. Notably, complex files aren't modified more frequently (that correlation is near zero). Developers engage with complex code, but their modifications are inconsistent.
+
+However, there's an important caveat: this correlation may be an artefact of how we measure both quantities. Since volatility is derived from complexity measurements, the two aren't truly independent. A file that happens to undergo varied structural changes will show both high mean complexity and high complexity variance by construction. I'll explore this limitation more honestly in a later post.
+
+## What's Next
+
+This post introduces the conceptual foundation. In upcoming posts, I'll cover:
+
+- **Validation methodology**: How do you know if a complexity metric actually works?
+- **The volatility correlation**: Is it real or an artefact?
+- **Uncomfortable truths**: What I learned about ALL complexity metrics (including this one)
+- **Language differences**: How complexity patterns vary across languages
+- **The limits of understanding**: 58% of variance remains unexplained
+
+The goal of this series is to document findings from research across approximately 5 million files and 2,000 repositories. Some findings validate the metric; others reveal uncomfortable limitations. I'll share both.
+
+## Summary
+
+Lexical Complexity is a code complexity metric built on:
+
+- **AST structure** rather than source text
+- **Depth weighting** reflecting cognitive load of nested code
+- **Branching factor** capturing decision point complexity
+- **Information-theoretic principles** inspired by entropy
+
+Early validation shows:
+
+- Strong correlation with established metrics (convergent validity)
+- Weak correlation with Cognitive Complexity (discriminant validity - measures something different)
+- Correlation with code volatility (though the causal direction is unclear)
+
+The metric isn't magic, and it has real limitations I'll discuss honestly. The evidence suggests it captures something about code structure, but whether that translates to actionable insights about maintainability remains an open question.
+
+<div class="series-nav">
+
+#### Lexical Complexity Research Series
+
+**Post 1:** Measuring Code Complexity From the AST (you are here)
+
+**Next:** How do you validate a complexity metric?
+
+</div>

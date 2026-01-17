@@ -1,0 +1,32 @@
+---
+interface Props {
+  showBlogLink?: boolean;
+  blogLinkHref?: string;
+  registerHref?: string;
+}
+
+const {
+  showBlogLink = true,
+  blogLinkHref = "/blog",
+  registerHref = "/#register"
+} = Astro.props;
+---
+
+<header class="header">
+  <nav class="nav">
+    <div class="nav-brand">
+      <a href="/" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+        <img
+          src="/logo/Logo-white.png"
+          alt="Boltzmann Analyser Logo"
+          class="logo"
+        />
+        <h1>Boltzmann Analyser</h1>
+      </a>
+    </div>
+    <div class="nav-links">
+      {showBlogLink && <a href={blogLinkHref} class="nav-link">Blog</a>}
+      <a href={registerHref} class="btn-outline">Register Interest</a>
+    </div>
+  </nav>
+</header>

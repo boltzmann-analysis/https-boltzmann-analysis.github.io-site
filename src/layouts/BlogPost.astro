@@ -1,0 +1,192 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import ImageModal from '../components/ImageModal.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  series?: string;
+  seriesPart?: number;
+}
+
+const { title, description, date, series, seriesPart } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-GB', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<BaseLayout title={`${title} - Boltzmann Analyser Blog`} description={description}>
+  <Header blogLinkHref="/blog" />
+
+  <article class="blog-container">
+    <a href="/blog" class="back-link">&larr; Back to Blog</a>
+
+    <header class="blog-header">
+      <h1 class="blog-title">{title}</h1>
+      <p class="blog-meta">
+        {formattedDate}
+        {series && seriesPart && ` • Part ${seriesPart} of the ${series}`}
+      </p>
+    </header>
+
+    <div class="blog-content">
+      <slot />
+    </div>
+  </article>
+
+  <ImageModal />
+</BaseLayout>
+
+<style>
+  .blog-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    padding-top: 100px;
+  }
+
+  .blog-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color, #333);
+  }
+
+  .blog-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary, #fff);
+  }
+
+  .blog-meta {
+    color: var(--text-secondary, #888);
+    font-size: 0.9rem;
+  }
+
+  .blog-content {
+    line-height: 1.8;
+    color: var(--text-primary, #e0e0e0);
+  }
+
+  .blog-content :global(h2) {
+    color: var(--accent-color, #00d4ff);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+  }
+
+  .blog-content :global(h3) {
+    color: var(--text-primary, #fff);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+  }
+
+  .blog-content :global(p) {
+    margin-bottom: 1.25rem;
+  }
+
+  .blog-content :global(img) {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .blog-content :global(img:hover) {
+    transform: scale(1.02);
+  }
+
+  .blog-content :global(pre) {
+    background: #1a1a2e;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+
+  .blog-content :global(code) {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9rem;
+  }
+
+  .blog-content :global(ul),
+  .blog-content :global(ol) {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .blog-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-content :global(blockquote) {
+    border-left: 3px solid var(--accent-color, #00d4ff);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--text-secondary, #aaa);
+  }
+
+  .blog-content :global(a) {
+    color: var(--accent-color, #00d4ff);
+    text-decoration: none;
+  }
+
+  .blog-content :global(a:hover) {
+    text-decoration: underline;
+  }
+
+  .blog-content :global(.image-caption) {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary, #888);
+    margin-top: -1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .blog-content :global(.series-nav) {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .blog-content :global(.series-nav h4) {
+    margin-bottom: 0.5rem;
+    color: var(--text-primary, #fff);
+  }
+
+  .blog-content :global(.attribution) {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary, #aaa);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--accent-color, #00d4ff);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  // Make all blog images trigger the modal
+  document.querySelectorAll('.blog-content img').forEach(img => {
+    img.classList.add('modal-trigger');
+  });
+</script>
